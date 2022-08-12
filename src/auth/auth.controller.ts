@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { encodePassword, generateValidationToken } from './auth.utils';
-import { sendValidationEmail } from '../adapters/email';
-import { jwt_secret } from './auth.secrets';
+import { encodePassword, generateValidationToken } from './auth.utils.js';
+import { sendValidationEmail } from '../adapters/email.js';
+import { jwt_secret } from './auth.secrets.js';
 
 
 /**
@@ -10,7 +10,7 @@ import { jwt_secret } from './auth.secrets';
  * 3. Generate validation token and save it in DDBB on associated user.
  * 4. Send email with validation URL.
  */
- export const registerCtrl = async (req, res) => {
+ export const registerCtrl = async (req:any, res:any) => {
     try{
         //Check that email does not exist in DDBB - tennis-lesson-planner, collection - Users. If so send and error message.
         //Otherwise, encrypt the password sent in the body request.
@@ -44,7 +44,7 @@ import { jwt_secret } from './auth.secrets';
  * 4. Update user changing status to SUCCESS.
  */
 
- export const validateEmailCtrl = async (req, res) => {
+ export const validateEmailCtrl = async (req:any, res:any) => {
     const { token } = req.query; // step 1
     try{
         //Check that token already exists on DDBB - tennis-lesson-planner, collection - validate-token and update user status.
@@ -78,7 +78,7 @@ import { jwt_secret } from './auth.secrets';
  * 3. Returns it to the user.
  */
 
- export const loginCtrl = async (req, res) => {
+ export const loginCtrl = async (req:any, res:any) => {
     const { email, password } = req.body;
 
     //step 1

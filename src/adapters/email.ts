@@ -199,7 +199,7 @@ export const sendValidationEmail = async (to:string, url:string) => {
               <!-- start copy -->
               <tr>
                 <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                  <p style="margin: 0;">Tap the button below to confirm your email address. If you didn't create an account with <a href="https://sendgrid.com">Paste</a>, you can safely delete this email.</p>
+                  <p style="margin: 0;">Tap the button below to confirm your email address. If you didn't create an account with Tennis Lesson Planner, you can safely delete this email.</p>
                 </td>
               </tr>
               <!-- end copy -->
@@ -213,7 +213,7 @@ export const sendValidationEmail = async (to:string, url:string) => {
                         <table border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                              <a href="${url}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Valida tu email</a>
+                              <a href="${url}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Validate your email</a>
                             </td>
                           </tr>
                         </table>
