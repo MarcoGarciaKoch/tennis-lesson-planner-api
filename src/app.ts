@@ -1,8 +1,9 @@
 import express from "express";
 import cors from 'cors';
 import authRouter from "./auth/auth.router.js";
-// import userRouter from "./users/users.router";
-import { validateAuth } from "./auth/auth.middleware";
+import { validateAuth } from "./auth/auth.middleware.js";
+import usersRouter from './users/users.router.js'
+
 
 // Create express server
 export const app = express();
@@ -14,4 +15,4 @@ app.use(express.json());
 
 app.get('/ping', (_req,res) => res.send('pong'));
 app.use('/auth', authRouter); // Declare authetication router
-// app.use('/users', validateAuth, userRouter); // Declare user router
+app.use('/users', validateAuth, usersRouter); // Declare user router

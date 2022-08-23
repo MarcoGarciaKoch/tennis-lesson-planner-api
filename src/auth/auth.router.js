@@ -1,9 +1,11 @@
 import express from "express";
 import { validateUser } from "./auth.middleware.js";
-import { registerCtrl, validateEmailCtrl, loginCtrl } from "./auth.controller.js";
+import { registerCtrl, resendEmailValidationCtrl, validateEmailCtrl, loginCtrl } from "./auth.controller.js";
 export var router = express.Router();
 // endpoint for user register
 router.post('/register', validateUser, registerCtrl);
+// endpoint to resend validation email
+router.get('/resendEmail', resendEmailValidationCtrl);
 //endpoint to validate user email
 router.get('/validate', validateEmailCtrl);
 //endpoint to user login

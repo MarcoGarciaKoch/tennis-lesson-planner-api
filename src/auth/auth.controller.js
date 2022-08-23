@@ -66,7 +66,7 @@ export var registerCtrl = function (req, res) { return __awaiter(void 0, void 0,
                 user = _a.sent();
                 if (!(user === null)) return [3 /*break*/, 4];
                 req.body.password = encodePassword(req.body.password);
-                return [4 /*yield*/, req.app.locals.ddbbClient.usersCol.insertOne(__assign(__assign({}, req.body), { status: 'PENDING_VALIDATION' }))];
+                return [4 /*yield*/, req.app.locals.ddbbClient.usersCol.insertOne(__assign(__assign({}, req.body), { lessons: [], status: 'PENDING_VALIDATION' }))];
             case 2:
                 _a.sent(); //Step 2
                 token = generateValidationToken();
@@ -93,12 +93,57 @@ export var registerCtrl = function (req, res) { return __awaiter(void 0, void 0,
     });
 }); };
 /**
+ * 1. Check that user email exists on user entity and status is pending.
+ * 2. Send email with validation URL.
+ */
+export var resendEmailValidationCtrl = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var email, user, validateToken, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                email = req.query.email;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 6, , 7]);
+                return [4 /*yield*/, req.app.locals.ddbbClient.usersCol.findOne({ email: email })];
+            case 2:
+                user = _a.sent();
+                if (!(user !== null && user.status === 'PENDING_VALIDATION')) return [3 /*break*/, 4];
+                return [4 /*yield*/, req.app.locals.ddbbClient.tokenCol.findOne({ user: email })];
+            case 3:
+                validateToken = _a.sent();
+                //step 2
+                // Be aware, host is our react app
+                sendValidationEmail(email, "".concat(process.env.FRONT_APP_URL, "/validate?token=").concat(validateToken.token));
+                res.sendStatus(201);
+                return [3 /*break*/, 5];
+            case 4:
+                if (user !== null && user.status === 'SUCCESS') {
+                    // send error 409(conflict) because user is registered and can login.
+                    res.sendStatus(409);
+                }
+                else {
+                    // send error 404(not found) because user does not exist on DDBB.
+                    res.sendStatus(404);
+                }
+                _a.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                err_2 = _a.sent();
+                console.error(err_2);
+                res.sendStatus(500);
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); };
+/**
  * 1. Obetain the token
  * 2. Validate that token exists on DDBB and obtain the associated user.
  * 4. Update user changing status to SUCCESS.
  */
 export var validateEmailCtrl = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, valToken, updateDoc, err_2;
+    var token, valToken, updateDoc, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -130,8 +175,8 @@ export var validateEmailCtrl = function (req, res) { return __awaiter(void 0, vo
                 _a.label = 6;
             case 6: return [3 /*break*/, 8];
             case 7:
-                err_2 = _a.sent();
-                console.error(err_2);
+                err_3 = _a.sent();
+                console.error(err_3);
                 return [3 /*break*/, 8];
             case 8: return [2 /*return*/];
         }
@@ -144,7 +189,7 @@ export var validateEmailCtrl = function (req, res) { return __awaiter(void 0, vo
  * 3. Returns it to the user.
  */
 export var loginCtrl = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, query, user, token, err_3;
+    var _a, email, password, query, user, token, err_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -165,12 +210,14 @@ export var loginCtrl = function (req, res) { return __awaiter(void 0, void 0, vo
                     res.status(201).json({ access_token: token }); // step 3
                 }
                 else {
+                    // send error 404(not found) because user email or password do not exist on DDBB.
                     res.sendStatus(404);
                 }
                 return [3 /*break*/, 4];
             case 3:
-                err_3 = _b.sent();
-                console.log(err_3);
+                err_4 = _b.sent();
+                console.error(err_4);
+                res.sendStatus(500);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

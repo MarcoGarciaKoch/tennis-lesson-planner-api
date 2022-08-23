@@ -17,7 +17,7 @@ import { jwt_secret } from './auth.secrets.js';
         const user = await req.app.locals.ddbbClient.usersCol.findOne({email: req.body.email});
         if(user === null) {
             req.body.password = encodePassword(req.body.password);
-            await req.app.locals.ddbbClient.usersCol.insertOne({ ...req.body, status: 'PENDING_VALIDATION' }); //Step 2
+            await req.app.locals.ddbbClient.usersCol.insertOne({ ...req.body, lessons: [], status: 'PENDING_VALIDATION' }); //Step 2
             //Step 3
             const token = generateValidationToken();
             await req.app.locals.ddbbClient.tokenCol.insertOne({token, user: req.body.email});
@@ -28,6 +28,37 @@ import { jwt_secret } from './auth.secrets.js';
         }else {
             // send error 409(conflict) because user already exists on DDBB.
             res.sendStatus(409);
+        }
+
+    }catch (err){
+        console.error(err);
+        res.sendStatus(500)
+    }
+}
+
+/**
+ * 1. Check that user email exists on user entity and status is pending.
+ * 2. Send email with validation URL.
+ */
+export const resendEmailValidationCtrl = async (req:any, res:any) => {
+    const { email } = req.query
+    try{
+        //Check that email does exist in DDBB - tennis-lesson-planner, collection - Users. If so resend validation email.
+        //Otherwise, send a error message.
+        //Step 1
+        const user = await req.app.locals.ddbbClient.usersCol.findOne({email});
+        if(user !== null && user.status === 'PENDING_VALIDATION') {
+            const validateToken = await req.app.locals.ddbbClient.tokenCol.findOne({user: email});
+            //step 2
+            // Be aware, host is our react app
+            sendValidationEmail(email, `${process.env.FRONT_APP_URL}/validate?token=${validateToken.token}`);
+            res.sendStatus(201);
+        }else if(user !== null && user.status === 'SUCCESS') {
+            // send error 409(conflict) because user is registered and can login.
+            res.sendStatus(409)
+        }else {
+            // send error 404(not found) because user does not exist on DDBB.
+            res.sendStatus(404);
         }
 
     }catch (err){
@@ -94,9 +125,11 @@ import { jwt_secret } from './auth.secrets.js';
             const token = jwt.sign({ email: user.email, hola:'tennis-lesson-planner' }, jwt_secret); // step 2
             res.status(201).json({ access_token: token }); // step 3
         }else {
+            // send error 404(not found) because user email or password do not exist on DDBB.
             res.sendStatus(404);
         }
     }catch(err){
-        console.log(err);
+        console.error(err);
+        res.sendStatus(500)
     }
 }
