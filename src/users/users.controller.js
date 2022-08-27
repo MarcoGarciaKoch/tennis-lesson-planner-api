@@ -81,6 +81,7 @@ export var registerNewLessonCtrl = function (req, res) { return __awaiter(void 0
                             rate: req.body.rate,
                             price: req.body.price,
                             paid: req.body.paid,
+                            type: req.body.type,
                             players: req.body.players,
                             club: req.body.club
                         } }
