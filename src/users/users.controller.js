@@ -43,18 +43,18 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-export var getLessonsListCtrl = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, userOptions, lessons, err_1;
+export var getUserDataCtrl = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var query, userOptions, userData, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 query = req.email;
-                userOptions = { projection: { _id: 0, lessons: 1 } };
+                userOptions = { projection: { _id: 0, lessons: 1, name: 1, lastname: 1 } };
                 return [4 /*yield*/, req.app.locals.ddbbClient.usersCol.findOne({ email: query }, userOptions)];
             case 1:
-                lessons = _a.sent();
-                res.status(200).json(lessons);
+                userData = _a.sent();
+                res.status(200).json(userData);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();

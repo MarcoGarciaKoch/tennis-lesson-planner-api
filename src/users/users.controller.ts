@@ -1,13 +1,13 @@
 import { LessonData } from "./users.model";
 
 
-export const getLessonsListCtrl = async (req:any, res:any) => {
+export const getUserDataCtrl = async (req:any, res:any) => {
     //call the user
     try {
         const query = req.email; // try to find the user by email
-        const userOptions = { projection: {_id:0, lessons:1}}
-        const lessons = await req.app.locals.ddbbClient.usersCol.findOne({email: query}, userOptions);
-        res.status(200).json(lessons)
+        const userOptions = { projection: {_id:0, lessons:1, name:1, lastname:1}}
+        const userData = await req.app.locals.ddbbClient.usersCol.findOne({email: query}, userOptions);
+        res.status(200).json(userData)
     }catch(err) {
         console.error(err);
         res.sendStatus(500);
