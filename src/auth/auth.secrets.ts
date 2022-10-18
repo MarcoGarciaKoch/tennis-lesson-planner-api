@@ -1,1 +1,1 @@
-export const jwt_secret = 'TENNIS_LESSONS_AUTH';
+export const jwt_secret = 'dñvkgAdkjRTLÑCNfkdlfdlkfWSCPLdsjcjskkdAAARTckdlkaaapodk';

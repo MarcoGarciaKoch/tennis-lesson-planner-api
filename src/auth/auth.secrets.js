@@ -1,1 +1,1 @@
-export var jwt_secret = 'TENNIS_LESSONS_AUTH';
+export var jwt_secret = 'dñvkgAdkjRTLÑCNfkdlfdlkfWSCPLdsjcjskkdAAARTckdlkaaapodk';
