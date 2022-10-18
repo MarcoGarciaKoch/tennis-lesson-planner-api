@@ -17,7 +17,7 @@ async function start() {
             tokenCol: db.collection('validate-token')
             // client: client
         }; //2. Save it in Locals to access from routes
-        app.listen(port, () => console.log(`🔥🔥Server running on port ${port}🔥🔥`));
+        app.listen(port, () => console.log(`🔥Server running on port ${port}🔥`));
     }catch(err){
         console.error('Error on server: ', err);
     }
